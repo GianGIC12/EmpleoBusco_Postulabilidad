@@ -13,7 +13,7 @@ package beans;
 public class AvisoBean {
     
    int id_empresa,id_aviso; 
-   String nombre_empresa,pais,fecha;
+   String nombre_empresa,ruc,pais,fecha;
    int postulaciones;
 
     public AvisoBean() {
