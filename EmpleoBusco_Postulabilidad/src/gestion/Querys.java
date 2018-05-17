@@ -129,6 +129,7 @@ public class Querys {
            + " from db_empleobusco_prod.empresa as a"
            +" join db_empleobusco_prod.anuncio_web as b " 
            + " on a.id=b.id_empresa " 
+           + " where b.fh_creacion>='2018-01-01'"     
               ;
           
         PreparedStatement stm = objCon.getCon().prepareStatement(sql);
@@ -151,6 +152,15 @@ public class Querys {
                 pais=rs.getString(5);
             }
             
+            aviso.setId_empresa(id_empresa);
+            aviso.setId_aviso(id_aviso);
+            aviso.setNombre_empresa(nombre_empresa);
+            aviso.setRuc(ruc);
+            aviso.setPais(pais);
+            
+            
+            avisos.add(aviso);
+            
             
             System.out.println(contador +  " : " +rs.getInt(1)+" : "+pais);
             
@@ -163,11 +173,99 @@ public class Querys {
     
     
     public void listarAvisos(){
-        
-        
+        int contador=0;
+      
+        for (AvisoBean aviso: avisos) {
+            contador++;
+        System.out.println(contador+ " : id_empresa: "+ aviso.getId_empresa()
+        +" id_Aviso: "+aviso.getId_aviso()
+        +" Nombre_Empresa: "+aviso.getNombre_empresa()
+        + " RUC: "+aviso.getRuc()
+        + " Pais: " +aviso.getPais());    
+             
+            
+        }
         
         
     }
     
 
+    public void conseguirPostulaciones(int num_dia) throws SQLException{
+        
+        String fecha= fechas1[num_dia-1];
+        System.out.println("postulaciones: "+fecha);
+        int id_aviso;
+        
+         Conexion objCon = new Conexion();
+          objCon.conectar();
+       int contador=0;
+        for (AvisoBean aviso: avisos) {
+            
+          id_aviso=aviso.getId_aviso();
+        sql=" select count(*) as cantidad from db_empleobusco_prod.postulacion "
+               + " where id_anuncio_web="+ id_aviso +" and substring(fh,1,10)= " +"'"+fecha+"'" ;
+            System.out.println(""+sql);
+        PreparedStatement stm = objCon.getCon().prepareStatement(sql);
+        ResultSet rs = stm.executeQuery();
+        contador++;
+         
+        while (rs.next()) {
+            
+            aviso.setPostulaciones(rs.getInt("cantidad"));
+            aviso.setFecha(fecha);
+            System.out.println(contador+" : "+aviso.getPostulaciones());
+        }
+        
+     }
+        
+         objCon.desconectar(); 
+        
+    }
+    
+    
+    public void listarPostulaciones(){
+        int contador=0;
+      
+        for (AvisoBean aviso: avisos) {
+            contador++;
+        System.out.println(contador+ " : id_empresa: "+ aviso.getId_empresa()
+        +" id_Aviso: "+aviso.getId_aviso()
+        +" Nombre_Empresa: "+aviso.getNombre_empresa()
+        + " RUC: "+aviso.getRuc()
+        + " Pais: " +aviso.getPais()
+        + " Fecha: " +aviso.getFecha()
+        + " Postulaciones: "+aviso.getPostulaciones());    
+             
+            
+        }
+        
+        
+    }
+
+    public List<AvisoBean> getAvisos() {
+        return avisos;
+    }
+
+    public void setAvisos(List<AvisoBean> avisos) {
+        this.avisos = avisos;
+    }
+
+    public String[] getFechas1() {
+        return fechas1;
+    }
+
+    public void setFechas1(String[] fechas1) {
+        this.fechas1 = fechas1;
+    }
+
+    public String getSql() {
+        return sql;
+    }
+
+    public void setSql(String sql) {
+        this.sql = sql;
+    }
+    
+    
+    
 }

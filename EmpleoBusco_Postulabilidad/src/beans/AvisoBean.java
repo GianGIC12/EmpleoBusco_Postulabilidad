@@ -69,6 +69,14 @@ public class AvisoBean {
     public void setPostulaciones(int postulaciones) {
         this.postulaciones = postulaciones;
     }
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
    
     
     
