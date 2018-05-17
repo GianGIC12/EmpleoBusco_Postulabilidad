@@ -6,7 +6,9 @@
 
 package pruebas;
 
+import archivos.ExportarCSV;
 import gestion.Querys;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 
@@ -19,7 +21,7 @@ public class Resumen_Anunciante {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException {
         // TODO code application logic here
         
          Calendar calendar = Calendar.getInstance();
@@ -51,6 +53,9 @@ public class Resumen_Anunciante {
         q.conseguirPostulaciones(num_dia);
         q.listarPostulaciones();
         
+        ExportarCSV e= new ExportarCSV();
+        
+        e.exportarResultados(q.getAvisos(),q.getFechas1()[num_dia]);
         
         
         
