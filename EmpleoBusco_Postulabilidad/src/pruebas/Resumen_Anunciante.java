@@ -48,6 +48,10 @@ public class Resumen_Anunciante {
         
         q.listarAvisos();
         
+        //Toco code logic here
+        
+        q.completarAreas();
+        
         System.out.println("***Completar postulaciones****");
         
         q.conseguirPostulaciones(num_dia);

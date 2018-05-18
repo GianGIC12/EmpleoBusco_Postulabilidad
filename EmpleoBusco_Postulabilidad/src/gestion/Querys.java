@@ -124,8 +124,8 @@ public class Querys {
         
          Conexion objCon = new Conexion();
           objCon.conectar();
-        sql="select a.id as id_empresa, b.id as id_aviso, a.razon_comercial as nombre_empresa,"
-           +"a.ruc as ruc, b.slug_pais as pais " 
+        sql="select a.id as id_empresa, b.id as id_aviso, a.slug_empresa as nombre_empresa,"
+           +"a.ruc as ruc, b.slug_pais as pais, b.id_area as id_area" 
            + " from db_empleobusco_prod.empresa as a"
            +" join db_empleobusco_prod.anuncio_web as b " 
            + " on a.id=b.id_empresa " 
@@ -148,16 +148,19 @@ public class Querys {
             String ruc= rs.getString(4);
             String pais= "No Definido";
             
+            
             if (rs.getString(5)!=null) {
                 pais=rs.getString(5);
             }
+            
+            int id_area= rs.getInt(6);
             
             aviso.setId_empresa(id_empresa);
             aviso.setId_aviso(id_aviso);
             aviso.setNombre_empresa(nombre_empresa);
             aviso.setRuc(ruc);
             aviso.setPais(pais);
-            
+            aviso.setId_area(id_area);
             
             avisos.add(aviso);
             
@@ -181,11 +184,50 @@ public class Querys {
         +" id_Aviso: "+aviso.getId_aviso()
         +" Nombre_Empresa: "+aviso.getNombre_empresa()
         + " RUC: "+aviso.getRuc()
-        + " Pais: " +aviso.getPais());    
+        + " Pais: " +aviso.getPais()
+        + " Id_Area*****: "+aviso.getId_area());    
              
             
         }
         
+        
+    }
+    
+    
+    public void completarAreas() throws SQLException{
+       int id_area=1;
+       String nombre_area="No definido";
+       
+        Conexion objCon = new Conexion();
+          objCon.conectar();
+       int contador=0;
+       
+        for (AvisoBean aviso: avisos) {
+            
+        id_area=aviso.getId_area();
+     
+          
+          sql="select slug as nombre_area from db_empleobusco_prod.area "
+              + " where id= " + id_area  ;
+          
+          PreparedStatement stm = objCon.getCon().prepareStatement(sql);
+        ResultSet rs = stm.executeQuery();
+          
+         contador++;
+        
+        while (rs.next()) {
+            
+            nombre_area=rs.getString(1);
+            aviso.setNombre_area(nombre_area);
+            System.out.println(contador+" : "+nombre_area);
+        }
+          
+        
+        }
+        
+        
+        
+          objCon.desconectar();  
         
     }
     

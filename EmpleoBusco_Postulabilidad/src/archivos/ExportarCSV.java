@@ -24,7 +24,7 @@ public class ExportarCSV {
     
     public void exportarResultados(List<AvisoBean> avisos, String fechita) throws IOException{
         
-         String outputFile = "C:/Users/user/Google Drive/Digital_Balance_AT/Retiros_Depositos_Diarios/bd_empleo_postulabilidad_" + fechita + ".csv";
+         String outputFile = "C:/Users/user/Google Drive/Digital_Balance_EmpleoBusco/Base_postulabilidad/bd_empleo_postulabilidad_" + fechita + ".csv";
 
           boolean alreadyExists = new File(outputFile).exists();
 
@@ -43,7 +43,8 @@ public class ExportarCSV {
         csvOutput.write("pais");
         csvOutput.write("fecha");
         csvOutput.write("postulaciones");
-        
+        csvOutput.write("id_area");
+        csvOutput.write("nombre_area");
 
         csvOutput.endRecord();
         
@@ -58,6 +59,9 @@ public class ExportarCSV {
                 csvOutput.write(aviso.getFecha() + "");
                 
                 csvOutput.write(aviso.getPostulaciones() + "");
+                
+                csvOutput.write(aviso.getId_area() + "");
+                csvOutput.write(aviso.getNombre_area() + "");
 
                 csvOutput.endRecord();
             
