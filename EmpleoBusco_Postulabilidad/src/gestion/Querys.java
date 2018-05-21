@@ -129,11 +129,11 @@ public class Querys {
         sql="select a.id as id_empresa, b.id as id_aviso, a.slug_empresa as nombre_empresa,"
               
            +"a.ruc as ruc, b.slug_pais as pais, b.id_area as id_area, b.puesto as puesto, b.id_nivel_puesto as nivel_puesto, " 
-           +" substring(b.fh_creacion,1,10) as fecha"
+           +" substring(b.fh_pub,1,10) as fecha"
                 + " from db_empleobusco_prod.empresa as a"
            +" join db_empleobusco_prod.anuncio_web as b " 
            + " on a.id=b.id_empresa " 
-           + " where b.fh_creacion>='2018-01-01'"     
+           + " where b.fh_pub>='2018-01-01'"     
               ;
           
         PreparedStatement stm = objCon.getCon().prepareStatement(sql);

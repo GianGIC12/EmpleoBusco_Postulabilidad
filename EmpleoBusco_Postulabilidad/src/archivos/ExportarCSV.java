@@ -24,7 +24,7 @@ public class ExportarCSV {
     
     public void exportarResultados(List<AvisoBean> avisos, String fechita) throws IOException{
         
-         String outputFile = "C:/Users/user/Google Drive/Digital_Balance_EmpleoBusco/Base_postulabilidad/bd_empleo_postulabilidad_" + fechita + ".csv";
+         String outputFile = "C:/Users/user/Google Drive/Digital_Balance_EmpleoBusco/Base_postulabilidad/bd_empleo_postulabilidad_" + ".csv";
 
           boolean alreadyExists = new File(outputFile).exists();
 
