@@ -51,6 +51,7 @@ public class Resumen_Anunciante {
         //Toco code logic here
         
         q.completarAreas();
+        q.completarNivel_Puesto();
         
         System.out.println("***Completar postulaciones****");
         
@@ -58,10 +59,29 @@ public class Resumen_Anunciante {
         q.listarPostulaciones();
         
         ExportarCSV e= new ExportarCSV();
+        int fechita=num_dia-1;
+        e.exportarResultados(q.getAvisos(),q.getFechas1()[fechita]);
         
-        e.exportarResultados(q.getAvisos(),q.getFechas1()[num_dia]);
+        System.out.println("*****Implementando el STOCK******************");
         
+        q.conseguirStock();
         
+        System.out.println("***Listar Avisos***");
+        
+        q.listarAvisos_Stock();
+        
+         
+        //Toco code logic here
+        
+        q.completarAreas_Stock();
+        q.completarNivel_Puesto_Stock();
+        
+        System.out.println("***Completar postulaciones****");
+        
+        q.conseguirPostulaciones_Stock(num_dia);
+        q.listarPostulaciones_Stock();
+        
+        e.exportarResultados_Stock(q.getAvisos_stock(),q.getFechas1()[fechita]);
         
     }
     

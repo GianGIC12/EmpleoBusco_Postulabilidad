@@ -45,6 +45,10 @@ public class ExportarCSV {
         csvOutput.write("postulaciones");
         csvOutput.write("id_area");
         csvOutput.write("nombre_area");
+        
+        csvOutput.write("puesto");
+        csvOutput.write("id_nivel_puesto");
+        csvOutput.write("nivel_puesto");
 
         csvOutput.endRecord();
         
@@ -62,6 +66,10 @@ public class ExportarCSV {
                 
                 csvOutput.write(aviso.getId_area() + "");
                 csvOutput.write(aviso.getNombre_area() + "");
+                
+                csvOutput.write(aviso.getPuesto() + "");
+                csvOutput.write(aviso.getId_nivel_puesto() + "");
+                csvOutput.write(aviso.getNivel_puesto() + "");
 
                 csvOutput.endRecord();
             
@@ -73,5 +81,63 @@ public class ExportarCSV {
         
     }
     
+    public void exportarResultados_Stock(List<AvisoBean> avisos, String fechita) throws IOException{
+        
+         String outputFile = "C:/Users/user/Google Drive/Digital_Balance_EmpleoBusco/Base_Stock/bd_empleo_postulabilidad_" + fechita + ".csv";
+
+          boolean alreadyExists = new File(outputFile).exists();
+
+        if (alreadyExists) {
+            File bd_empleo_postulabilidad = new File(outputFile);
+            bd_empleo_postulabilidad.delete();
+        }
+         
+         CsvWriter csvOutput = new CsvWriter(new FileWriter(outputFile, true), ';');
+
+        csvOutput.write("id_empresa");
+        csvOutput.write("id_aviso");
+        csvOutput.write("nombre_empresa");
+        csvOutput.write("ruc");
+
+        csvOutput.write("pais");
+        csvOutput.write("fecha");
+        csvOutput.write("postulaciones");
+        csvOutput.write("id_area");
+        csvOutput.write("nombre_area");
+        
+        csvOutput.write("puesto");
+        csvOutput.write("id_nivel_puesto");
+        csvOutput.write("nivel_puesto");
+
+        csvOutput.endRecord();
+        
+        for (AvisoBean aviso : avisos) {
+            
+            csvOutput.write(aviso.getId_empresa() + "");
+                csvOutput.write(aviso.getId_aviso() + "");
+                csvOutput.write(aviso.getNombre_empresa());
+                csvOutput.write(aviso.getRuc());
+
+                csvOutput.write(aviso.getPais());
+                csvOutput.write(aviso.getFecha() + "");
+                
+                csvOutput.write(aviso.getPostulaciones() + "");
+                
+                csvOutput.write(aviso.getId_area() + "");
+                csvOutput.write(aviso.getNombre_area() + "");
+                
+                csvOutput.write(aviso.getPuesto() + "");
+                csvOutput.write(aviso.getId_nivel_puesto() + "");
+                csvOutput.write(aviso.getNivel_puesto() + "");
+
+                csvOutput.endRecord();
+            
+            
+            
+        }
+        
+        csvOutput.close(); 
+        
+    }
     
 }

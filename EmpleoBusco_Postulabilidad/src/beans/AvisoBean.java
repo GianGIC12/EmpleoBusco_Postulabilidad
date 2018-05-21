@@ -17,6 +17,9 @@ public class AvisoBean {
    int postulaciones;
    int id_area;
    String nombre_area;
+   String puesto;
+   int id_nivel_puesto;
+   String nivel_puesto;
 
     public AvisoBean() {
         
@@ -94,6 +97,30 @@ public class AvisoBean {
 
     public void setNombre_area(String nombre_area) {
         this.nombre_area = nombre_area;
+    }
+
+    public String getPuesto() {
+        return puesto;
+    }
+
+    public void setPuesto(String puesto) {
+        this.puesto = puesto;
+    }
+
+    public int getId_nivel_puesto() {
+        return id_nivel_puesto;
+    }
+
+    public void setId_nivel_puesto(int id_nivel_puesto) {
+        this.id_nivel_puesto = id_nivel_puesto;
+    }
+
+    public String getNivel_puesto() {
+        return nivel_puesto;
+    }
+
+    public void setNivel_puesto(String nivel_puesto) {
+        this.nivel_puesto = nivel_puesto;
     }
    
     

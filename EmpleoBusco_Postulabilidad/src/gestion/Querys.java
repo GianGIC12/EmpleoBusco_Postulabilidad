@@ -23,12 +23,14 @@ import java.util.List;
 public class Querys {
 
     List<AvisoBean> avisos;
+    List<AvisoBean> avisos_stock;
     String[] fechas1;
     String sql; 
     
     public Querys() {
 
         avisos = new ArrayList<AvisoBean>();
+        avisos_stock = new ArrayList<AvisoBean>();
          fechas1 = new String[366];
         
     }
@@ -125,7 +127,7 @@ public class Querys {
          Conexion objCon = new Conexion();
           objCon.conectar();
         sql="select a.id as id_empresa, b.id as id_aviso, a.slug_empresa as nombre_empresa,"
-           +"a.ruc as ruc, b.slug_pais as pais, b.id_area as id_area" 
+           +"a.ruc as ruc, b.slug_pais as pais, b.id_area as id_area, b.puesto as puesto, b.id_nivel_puesto as nivel_puesto " 
            + " from db_empleobusco_prod.empresa as a"
            +" join db_empleobusco_prod.anuncio_web as b " 
            + " on a.id=b.id_empresa " 
@@ -155,12 +157,31 @@ public class Querys {
             
             int id_area= rs.getInt(6);
             
+            String puesto=rs.getString(7);
+            int id_nivel_puesto=rs.getInt(8);
+            
             aviso.setId_empresa(id_empresa);
             aviso.setId_aviso(id_aviso);
             aviso.setNombre_empresa(nombre_empresa);
             aviso.setRuc(ruc);
             aviso.setPais(pais);
             aviso.setId_area(id_area);
+            
+            puesto= puesto.replaceAll("ó", "o");
+            puesto= puesto.replaceAll("é", "e");
+            puesto= puesto.replaceAll("í", "i");
+            puesto= puesto.replaceAll("ñ", "n");
+            puesto=puesto.replaceAll("á", "a");
+            puesto=puesto.replaceAll("ú","u");
+            puesto=puesto.replaceAll("Á","A");
+            puesto= puesto.replaceAll("–", "/");
+            puesto=puesto.replaceAll("ü", "u");
+            puesto=puesto.replaceAll("Ó", "O");
+            puesto=puesto.replaceAll("É", "E");
+            
+            
+            aviso.setPuesto(puesto);
+            aviso.setId_nivel_puesto(id_nivel_puesto);
             
             avisos.add(aviso);
             
@@ -185,7 +206,9 @@ public class Querys {
         +" Nombre_Empresa: "+aviso.getNombre_empresa()
         + " RUC: "+aviso.getRuc()
         + " Pais: " +aviso.getPais()
-        + " Id_Area*****: "+aviso.getId_area());    
+        + " Id_Area*****: "+aviso.getId_area()
+        +" Puesto: " + aviso.getPuesto()
+        + " id_nivel_puesto: " + aviso.getId_nivel_puesto());    
              
             
         }
@@ -231,7 +254,49 @@ public class Querys {
         
     }
     
-
+    public void completarNivel_Puesto() throws SQLException{
+        
+    int id_nivel_puesto=1;
+    String nivel_puesto="No Definido";
+   
+       Conexion objCon = new Conexion();
+          objCon.conectar();
+       int contador=0; 
+       
+        for (AvisoBean aviso: avisos) {
+            
+          id_nivel_puesto= aviso.getId_nivel_puesto();
+            
+          sql="select slug as nivel_puesto from db_empleobusco_prod.nivel_puesto "
+              + " where id= " + id_nivel_puesto  ;  
+          
+           PreparedStatement stm = objCon.getCon().prepareStatement(sql);
+        ResultSet rs = stm.executeQuery();
+          
+         contador++;
+         
+          while (rs.next()) {
+             
+               
+            nivel_puesto=rs.getString(1);
+            aviso.setNivel_puesto(nivel_puesto);
+            System.out.println(contador+" : "+nivel_puesto);
+              
+              
+              
+          }
+         
+         
+            
+            
+        }
+       
+       
+        objCon.desconectar();  
+        
+        
+    }
+    
     public void conseguirPostulaciones(int num_dia) throws SQLException{
         
         String fecha= fechas1[num_dia-1];
@@ -283,6 +348,231 @@ public class Querys {
         
         
     }
+    
+    
+     public void conseguirStock() throws SQLException {
+        
+         Conexion objCon = new Conexion();
+          objCon.conectar();
+        sql="select a.id as id_empresa, b.id as id_aviso, a.slug_empresa as nombre_empresa,"
+           +"a.ruc as ruc, b.slug_pais as pais, b.id_area as id_area, b.puesto as puesto, b.id_nivel_puesto as nivel_puesto " 
+           + " from db_empleobusco_prod.empresa as a"
+           +" join db_empleobusco_prod.anuncio_web as b " 
+           + " on a.id=b.id_empresa " 
+           + " where b.online=1 and b.estado='pagado' and b.borrador=0 and b.eliminado=0"     
+              ;
+          
+        PreparedStatement stm = objCon.getCon().prepareStatement(sql);
+        ResultSet rs = stm.executeQuery();
+        
+        int contador=0;
+        while (rs.next()) {
+            
+            contador++;
+            
+            AvisoBean aviso= new AvisoBean();
+            
+            int id_empresa= rs.getInt(1);
+            int id_aviso= rs.getInt(2);
+            String nombre_empresa= rs.getString(3);
+            String ruc= rs.getString(4);
+            String pais= "No Definido";
+            
+            
+            if (rs.getString(5)!=null) {
+                pais=rs.getString(5);
+            }
+            
+            int id_area= rs.getInt(6);
+            
+            String puesto=rs.getString(7);
+            int id_nivel_puesto=rs.getInt(8);
+            
+            aviso.setId_empresa(id_empresa);
+            aviso.setId_aviso(id_aviso);
+            aviso.setNombre_empresa(nombre_empresa);
+            aviso.setRuc(ruc);
+            aviso.setPais(pais);
+            aviso.setId_area(id_area);
+            
+            puesto= puesto.replaceAll("ó", "o");
+            puesto= puesto.replaceAll("é", "e");
+            puesto= puesto.replaceAll("í", "i");
+            puesto= puesto.replaceAll("ñ", "n");
+            puesto=puesto.replaceAll("á", "a");
+            puesto=puesto.replaceAll("ú","u");
+            puesto=puesto.replaceAll("Á","A");
+            puesto= puesto.replaceAll("–", "/");
+            puesto=puesto.replaceAll("ü", "u");
+            puesto=puesto.replaceAll("Ó", "O");
+            puesto=puesto.replaceAll("É", "E");
+            
+            
+            aviso.setPuesto(puesto);
+            aviso.setId_nivel_puesto(id_nivel_puesto);
+            
+            avisos_stock.add(aviso);
+            
+            
+            System.out.println(contador +  " : " +rs.getInt(1)+" : "+pais);
+            
+        }
+        
+        
+          objCon.desconectar(); 
+
+    }
+     
+     public void listarAvisos_Stock(){
+        int contador=0;
+      
+        for (AvisoBean aviso: avisos_stock) {
+            contador++;
+        System.out.println(contador+ " : id_empresa: "+ aviso.getId_empresa()
+        +" id_Aviso: "+aviso.getId_aviso()
+        +" Nombre_Empresa: "+aviso.getNombre_empresa()
+        + " RUC: "+aviso.getRuc()
+        + " Pais: " +aviso.getPais()
+        + " Id_Area*****: "+aviso.getId_area()
+        +" Puesto: " + aviso.getPuesto()
+        + " id_nivel_puesto: " + aviso.getId_nivel_puesto());    
+             
+            
+        }
+        
+        
+    }
+     
+     public void completarAreas_Stock() throws SQLException{
+       int id_area=1;
+       String nombre_area="No definido";
+       
+        Conexion objCon = new Conexion();
+          objCon.conectar();
+       int contador=0;
+       
+        for (AvisoBean aviso: avisos_stock) {
+            
+        id_area=aviso.getId_area();
+     
+          
+          sql="select slug as nombre_area from db_empleobusco_prod.area "
+              + " where id= " + id_area  ;
+          
+          PreparedStatement stm = objCon.getCon().prepareStatement(sql);
+        ResultSet rs = stm.executeQuery();
+          
+         contador++;
+        
+        while (rs.next()) {
+            
+            nombre_area=rs.getString(1);
+            aviso.setNombre_area(nombre_area);
+            System.out.println(contador+" : "+nombre_area);
+        }
+          
+        
+        }
+        
+        
+        
+          objCon.desconectar();  
+        
+    }
+     
+     public void completarNivel_Puesto_Stock() throws SQLException{
+        
+    int id_nivel_puesto=1;
+    String nivel_puesto="No Definido";
+   
+       Conexion objCon = new Conexion();
+          objCon.conectar();
+       int contador=0; 
+       
+        for (AvisoBean aviso: avisos_stock) {
+            
+          id_nivel_puesto= aviso.getId_nivel_puesto();
+            
+          sql="select slug as nivel_puesto from db_empleobusco_prod.nivel_puesto "
+              + " where id= " + id_nivel_puesto  ;  
+          
+           PreparedStatement stm = objCon.getCon().prepareStatement(sql);
+        ResultSet rs = stm.executeQuery();
+          
+         contador++;
+         
+          while (rs.next()) {
+             
+               
+            nivel_puesto=rs.getString(1);
+            aviso.setNivel_puesto(nivel_puesto);
+            System.out.println(contador+" : "+nivel_puesto);
+              
+              
+              
+          }
+         
+         
+            
+            
+        }
+       
+       
+        objCon.desconectar();  
+        
+        
+    }
+     
+     public void conseguirPostulaciones_Stock(int num_dia) throws SQLException{
+        
+        String fecha= fechas1[num_dia-1];
+        System.out.println("postulaciones: "+fecha);
+        int id_aviso;
+        
+         Conexion objCon = new Conexion();
+          objCon.conectar();
+       int contador=0;
+        for (AvisoBean aviso: avisos_stock) {
+            
+          id_aviso=aviso.getId_aviso();
+        sql=" select count(*) as cantidad from db_empleobusco_prod.postulacion "
+               + " where id_anuncio_web="+ id_aviso +" and substring(fh,1,10)= " +"'"+fecha+"'" ;
+            System.out.println(""+sql);
+        PreparedStatement stm = objCon.getCon().prepareStatement(sql);
+        ResultSet rs = stm.executeQuery();
+        contador++;
+         
+        while (rs.next()) {
+            
+            aviso.setPostulaciones(rs.getInt("cantidad"));
+            aviso.setFecha(fecha);
+            System.out.println(contador+" : "+aviso.getPostulaciones());
+        }
+        
+     }
+        
+         objCon.desconectar(); 
+        
+    }
+    
+     public void listarPostulaciones_Stock(){
+        int contador=0;
+      
+        for (AvisoBean aviso: avisos_stock) {
+            contador++;
+        System.out.println(contador+ " : id_empresa: "+ aviso.getId_empresa()
+        +" id_Aviso: "+aviso.getId_aviso()
+        +" Nombre_Empresa: "+aviso.getNombre_empresa()
+        + " RUC: "+aviso.getRuc()
+        + " Pais: " +aviso.getPais()
+        + " Fecha: " +aviso.getFecha()
+        + " Postulaciones: "+aviso.getPostulaciones());    
+             
+            
+        }
+        
+        
+    }
 
     public List<AvisoBean> getAvisos() {
         return avisos;
@@ -306,6 +596,14 @@ public class Querys {
 
     public void setSql(String sql) {
         this.sql = sql;
+    }
+
+    public List<AvisoBean> getAvisos_stock() {
+        return avisos_stock;
+    }
+
+    public void setAvisos_stock(List<AvisoBean> avisos_stock) {
+        this.avisos_stock = avisos_stock;
     }
     
     
