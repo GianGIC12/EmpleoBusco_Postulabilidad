@@ -127,8 +127,10 @@ public class Querys {
          Conexion objCon = new Conexion();
           objCon.conectar();
         sql="select a.id as id_empresa, b.id as id_aviso, a.slug_empresa as nombre_empresa,"
-           +"a.ruc as ruc, b.slug_pais as pais, b.id_area as id_area, b.puesto as puesto, b.id_nivel_puesto as nivel_puesto " 
-           + " from db_empleobusco_prod.empresa as a"
+              
+           +"a.ruc as ruc, b.slug_pais as pais, b.id_area as id_area, b.puesto as puesto, b.id_nivel_puesto as nivel_puesto, " 
+           +" substring(b.fh_creacion,1,10) as fecha"
+                + " from db_empleobusco_prod.empresa as a"
            +" join db_empleobusco_prod.anuncio_web as b " 
            + " on a.id=b.id_empresa " 
            + " where b.fh_creacion>='2018-01-01'"     
@@ -160,6 +162,8 @@ public class Querys {
             String puesto=rs.getString(7);
             int id_nivel_puesto=rs.getInt(8);
             
+            String fecha= rs.getString(9);
+            
             aviso.setId_empresa(id_empresa);
             aviso.setId_aviso(id_aviso);
             aviso.setNombre_empresa(nombre_empresa);
@@ -182,6 +186,7 @@ public class Querys {
             
             aviso.setPuesto(puesto);
             aviso.setId_nivel_puesto(id_nivel_puesto);
+            aviso.setFecha(fecha);
             
             avisos.add(aviso);
             
@@ -310,7 +315,7 @@ public class Querys {
             
           id_aviso=aviso.getId_aviso();
         sql=" select count(*) as cantidad from db_empleobusco_prod.postulacion "
-               + " where id_anuncio_web="+ id_aviso +" and substring(fh,1,10)= " +"'"+fecha+"'" ;
+               + " where id_anuncio_web="+ id_aviso;
             System.out.println(""+sql);
         PreparedStatement stm = objCon.getCon().prepareStatement(sql);
         ResultSet rs = stm.executeQuery();
@@ -319,7 +324,7 @@ public class Querys {
         while (rs.next()) {
             
             aviso.setPostulaciones(rs.getInt("cantidad"));
-            aviso.setFecha(fecha);
+        //  aviso.setFecha(fecha);
             System.out.println(contador+" : "+aviso.getPostulaciones());
         }
         
